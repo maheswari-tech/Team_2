@@ -6,40 +6,74 @@ function AdminDashboard() {
   const [drivers, setDrivers] = useState([]); // Start with empty drivers
   
   const [newDriver, setNewDriver] = useState({
-    name: "", email: "", phone: "", vehicle: "", password: ""
+    name: "", email: "", phone: "", vehicle: "", password: "", location: ""
   });
   
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [filter, setFilter] = useState("all");
 
   // Add Driver Function
-  const handleAddDriver = () => {
-    if (newDriver.name && newDriver.email && newDriver.phone && newDriver.password) {
-      const driver = {
-        id: drivers.length + 1,
-        ...newDriver,
-        status: "offline",
-        rides: 0,
-        joinedDate: new Date().toLocaleDateString()
-      };
-      setDrivers([...drivers, driver]);
-      
-      // Show success message with credentials
-      alert(`✅ Driver added successfully!\n\nName: ${newDriver.name}\nEmail: ${newDriver.email}\nPassword: ${newDriver.password}\n\nPlease save these credentials.`);
-      
+  const handleAddDriver = async () => {
+    if (!newDriver.name || !newDriver.email || !newDriver.phone || !newDriver.password || !newDriver.location) {
+      alert("Please fill all fields including password and location");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/drivers/driver-register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newDriver),
+      });
+
+      if (!response.ok) {
+        alert("Error adding driver: ");
+        return;
+      }
+
+      const savedDriver = await response.json();
+
+      // Update drivers list locally
+      setDrivers([...drivers, savedDriver]);
+
+      // Show success message
+      alert(`✅ Driver added successfully!\n\nName: ${savedDriver.name}\nEmail: ${savedDriver.email}\nPassword: ${savedDriver.password}\nLocation: ${savedDriver.location}\n\nPlease save these credentials.`);
+
       // Clear form
-      setNewDriver({ name: "", email: "", phone: "", vehicle: "", password: "" });
-    } else {
-      alert("Please fill all fields including password");
+      setNewDriver({ name: "", email: "", phone: "", vehicle: "", password: "", location: "" });
+      
+    } catch (error) {
+      console.error("Error during adding driver:", error);
+      alert("Something went wrong. Please try again.");
     }
   };
 
-  // Delete Driver
-  const handleDeleteDriver = (id) => {
-    if (window.confirm("Are you sure you want to delete this driver?")) {
-      setDrivers(drivers.filter(d => d.id !== id));
+// Delete Driver by ID
+const handleDeleteDriver = async (id) => {
+  if (!window.confirm("Are you sure you want to delete this driver?")) return;
+
+  try {
+    const response = await fetch(`http://localhost:8080/api/drivers/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const errorMsg = await response.text();
+      alert("Error deleting driver: " + errorMsg);
+      return;
     }
-  };
+
+    // Remove driver from local state after successful deletion
+    setDrivers(drivers.filter(driver => driver.id !== id));
+    alert("Driver deleted successfully!");
+    
+  } catch (error) {
+    console.error("Error deleting driver:", error);
+    alert("Something went wrong. Please try again.");
+  }
+};
 
   // View Driver Details
   const handleViewDriver = (driver) => {
@@ -150,6 +184,14 @@ function AdminDashboard() {
               className="form-input"
               required
             />
+            <input
+              type="text"
+              placeholder="Location"
+              value={newDriver.location}
+              onChange={(e) => setNewDriver({...newDriver, location: e.target.value})}
+              className="form-input"
+              required
+            />
             <select className="form-input" defaultValue="Bike">
               <option value="Bike">Bike</option>
               <option value="Auto">Auto</option>
@@ -189,6 +231,7 @@ function AdminDashboard() {
                 <p><strong>Password:</strong> {selectedDriver.password}</p>
                 <p><strong>Phone:</strong> {selectedDriver.phone}</p>
                 <p><strong>Vehicle:</strong> {selectedDriver.vehicle}</p>
+                <p><strong>Location:</strong> {selectedDriver.location}</p>
                 <p><strong>Status:</strong> <span className={`status ${selectedDriver.status}`}>{selectedDriver.status}</span></p>
                 <p><strong>Total Rides:</strong> {selectedDriver.rides}</p>
                 <p><strong>Joined Date:</strong> {selectedDriver.joinedDate}</p>
@@ -204,6 +247,7 @@ function AdminDashboard() {
                   <th>Password</th>
                   <th>Phone</th>
                   <th>Vehicle</th>
+                  <th>Location</th>
                   <th>Status</th>
                   <th>Rides</th>
                   <th>Actions</th>
@@ -219,6 +263,7 @@ function AdminDashboard() {
                     </td>
                     <td>{driver.phone}</td>
                     <td>{driver.vehicle}</td>
+                    <td>{driver.location}</td>
                     <td><span className={`status ${driver.status}`}>{driver.status}</span></td>
                     <td>{driver.rides}</td>
                     <td>

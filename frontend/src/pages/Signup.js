@@ -7,19 +7,49 @@ function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phonenumber, setPhone] = useState("");
 
   const navigate = useNavigate();
 
-  const handleSignup = () => {
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
+  const handleSignup = async () => {
+  if (password !== confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  const signupData = {
+    name,
+    email,
+    username,
+    phonenumber,
+    password,
+  };
+
+  try {
+    const response = await fetch("http://localhost:8080/api/user/userdetail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(signupData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      alert("Signup failed: " + errorData.message);
       return;
     }
+
+    const data = await response.json();
+    alert("Signup Successful! Welcome, " + data.name);
     
-    // Use the state variables
-    console.log("Signup attempt with:", { name, email, username, phone });
-    alert("Signup Successful");
+    // Navigate to login or dashboard
+    navigate("/login");
+
+    } catch (error) {
+      console.error("Error during signup:", error);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   const goToLogin = () => {
@@ -51,7 +81,7 @@ function Signup() {
 
         <input
           placeholder="Phone Number"
-          value={phone}
+          value={phonenumber}
           onChange={(e) => setPhone(e.target.value)}
         />
 

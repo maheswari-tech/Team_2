@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "../styles/main.css";
-import logo from "../assets/logo.png";
+import logo from "../assets/applogo.jpg";
 
 function Navbar(){
 
@@ -20,8 +20,8 @@ function Navbar(){
 
         <div className="navtop">
           <Link to="/">Home</Link>
+          <Link to="/book">Book Ride</Link>
           <Link to="/about">About Us</Link>
-          <Link to="/bookride">Book Ride</Link>
         </div>
 
         <div className="navbutton">

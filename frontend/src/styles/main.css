@@ -4,6 +4,7 @@ nav{
   background:#111;
   padding:15px 60px;
   color:white;
+  height: 40px;;
 }
 
 /* main navbar container */
@@ -12,30 +13,30 @@ nav{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  
 }
 
 /* logo */
 
 .navlogo{
   display:flex;
-  align-items:center;
-  gap:10px;
+  gap:20px;
+  margin-left: 0px;
 }
 
 .navlogo h2{
-  font-size:25px;
-  font-weight:600;
-}
-.navlogo{
-  display:flex;
-  align-items:center;
-  gap:8px;
+  font-size:23px;
+  font-weight: bold;
+  margin-top: 8px;
+  color: white;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 .logoimg{
-  width:50px;
-  height:50px;
+  width:40px;
+  height:40px;
   object-fit:contain;
+  margin-bottom: px;
 }
 
 /* menu links */
@@ -43,13 +44,15 @@ nav{
 .navtop{
   display:flex;
   gap:30px;
+  margin-bottom: 7px;
+  margin-left: 50px;
 }
 
 .navtop a{
   text-decoration:none;
   color:white;
   font-size:20px;
-  font-weight:500;
+  font-weight:bold;
   transition:0.3s;
 }
 
@@ -61,29 +64,41 @@ nav{
 
 .navbutton{
   display:flex;
-  gap:15px;
+  gap:20px;
+  margin-bottom: 7px;
 }
 
 .loginbtn{
-  padding:8px 18px;
   border:1px solid white;
-  background:transparent;
+  background: linear-gradient(90deg,#ff7a00, #ffb347);
   color:white;
   border-radius:5px;
   cursor:pointer;
+  font-weight: bold;
+  width: 80px;
+  height: 30px;
+  font-size: 15px;
 }
 
+.loginbtn:hover{
+  transform: translateY(-3px);
+  box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.849);
+}
 .signupbtn{
-  padding:8px 18px;
-  border:none;
-  background:#f0c040;
-  color:black;
+  border:1px solid white;
+  background: linear-gradient(90deg, #0066ff, #00c6ff);
+  color: white;
   border-radius:5px;
   cursor:pointer;
+  font-weight: bold;
+  width: 80px;
+  height: 30px;
+  font-size: 15px;
 }
 
 .signupbtn:hover{
-  background:#ffd76a;
+   transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.849);
 }
 /* HOME SECTION */
 
@@ -135,7 +150,24 @@ nav{
 }
 
 /* Description */
+.hero-content{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
+.hero-content h1{
+  color: #0066FF;
+}
+
+.hero-content h3{
+  text-align: center;
+  width: 1000px;
+  font-size: 30px;
+  color: #7B2FF7;
+  margin-left: 100px;
+  font-weight: bold;
+}
 .home-container p{
   font-size:20px;
   margin-bottom:30px;
@@ -146,22 +178,23 @@ nav{
 /* Book Ride Button */
 
 .book-btn{
-  background:#FFC107;
-  color:black;
-  border:none;
-  padding:14px 30px;
+  background: linear-gradient(90deg,#ff7a00, #ffb347);
+  color:white;
   font-size:18px;
+  border:1px solid white;
   font-weight:600;
   border-radius:8px;
   cursor:pointer;
   transition:0.3s;
+  width: 150px;
+  height: 40px;
 }
 
 /* Hover effect */
 
 .book-btn:hover{
-  transform:scale(1.05);
-  background:#e6ac00;
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.849);
 }
 
 /* LOGIN PAGE */
@@ -290,9 +323,18 @@ nav{
 }
 
 /* Inputs and dropdown */
-.card input,
+.card input{
+  width: 90%;
+  padding:10px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:6px;
+  font-size:14px;
+  outline:none;
+  transition:0.3s;
+}
 .card select{
-  width:90%;
+  width: 95%;
   padding:10px;
   margin:8px 0;
   border:1px solid #ccc;
@@ -335,4 +377,49 @@ nav{
   color: #666;
   font-size: 0.85rem;
   text-align: center;
+}
+
+/* 
+About.css */
+/* Container */
+.about-container {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 40px;
+  background: linear-gradient(180deg, #000000, #121212);
+  color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+}
+
+/* Title */
+.about-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #00c6ff; /* Blue accent */
+}
+
+/* Paragraph Text */
+.about-text {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  text-align: justify;
+  color: #e0e0e0; /* Soft white for readability */
+}
+
+/* Optional Responsive */
+@media (max-width: 768px) {
+  .about-container {
+    margin: 20px;
+    padding: 20px;
+  }
+  .about-title {
+    font-size: 2rem;
+  }
+  .about-text {
+    font-size: 1rem;
+  }
 }

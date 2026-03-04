@@ -16,15 +16,7 @@ function Login() {
   const [role, setRole] = useState("");
   const navigate = useNavigate();
 
-  // Load drivers from localStorage on component mount
-  useState(() => {
-    const storedDrivers = localStorage.getItem('drivers');
-    if (storedDrivers) {
-      driverCredentials = JSON.parse(storedDrivers);
-    }
-  }, []);
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Admin login
     if (role === "ADMIN") {
       if (email === adminCredentials.email && password === adminCredentials.password) {
@@ -36,25 +28,69 @@ function Login() {
     
     // Driver login - check against drivers added by admin
     else if (role === "DRIVER") {
-      const storedDrivers = JSON.parse(localStorage.getItem('drivers') || '[]');
-      const driver = storedDrivers.find(d => d.email === email && d.password === password);
-      
-      if (driver) {
-        // Store logged in driver info
-        localStorage.setItem('currentDriver', JSON.stringify(driver));
-        navigate("/driver-dashboard");
-      } else {
-        alert("Invalid Driver Credentials");
-      }
+
+      const slogin = {
+            email,
+            password
+        };
+
+        try{
+            const response = await fetch("http://localhost:8080/api/drivers/driver-login",{
+                method: "POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify(slogin)
+            });
+
+            const data = await response.json();
+
+            if(data.success){
+                alert("Login Successful");
+                navigate("/driver-dashboard")
+                // navigate("/student-dashboard",{state:{reg}});
+            }
+            else{
+                alert(data.message);
+            }
+        }
+        catch(error){
+            console.log(error);
+            alert("Server error");
+        }
     }
     
     // User login (simplified for demo)
     else if (role === "USER") {
-      if (email === "user@gmail.com" && password === "123") {
-        navigate("/user-dashboard");
-      } else {
-        alert("Invalid User Credentials");
-      }
+       const slogin = {
+            email,
+            password
+        };
+
+        try{
+            const response = await fetch("http://localhost:8080/api/user/user-login",{
+                method: "POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify(slogin)
+            });
+
+            const data = await response.json();
+
+            if(data.success){
+                alert("Login Successful");
+                localStorage.setItem("isUserLoggedIn","true");
+                // navigate("/student-dashboard",{state:{reg}});
+            }
+            else{
+                alert(data.message);
+            }
+        }
+        catch(error){
+            console.log(error);
+            alert("Server error");
+        }
     }
     
     else {

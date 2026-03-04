@@ -1,8 +1,23 @@
-function BookRide(){
+import { useNavigate } from 'react-router-dom';
+import '../styles/bookride.css'
 
+function BookRide(){
+  const navigate = useNavigate();
+  const bookride = () => {
+    const loggedIn = localStorage.getItem("isUserLoggedIn");
+
+    if(loggedIn !== "true"){
+      navigate("/login");
+    }
+    else{
+      localStorage.removeItem("isUserLoggedIn");
+      navigate("/book-ride");
+    }
+
+  }
  return(
 
-  <div className="container">
+  <div className="bookcontainer">
 
     <div className="card">
 
@@ -14,13 +29,13 @@ function BookRide(){
 
       <input type="date"/>
 
-      <select>
+      <select className='bookselect'>
         <option>Car</option>
         <option>Bike</option>
         <option>Auto</option>
       </select>
 
-      <button>Book Ride</button>
+      <button onClick={bookride}>Book Ride</button>
 
     </div>
 
