@@ -6,10 +6,10 @@ function Home() {
     <div className="home-container">
 
       <div className="hero-content">
-        <h1>Go anywhere. Ride anytime.</h1>
+        <h1>"Go anywhere. Ride anytime"</h1>
 
         <h3 className="hh1">
-          Whether it’s work, shopping, or a late-night trip, we connect you with reliable drivers near you. Fast pickups, transparent pricing, and smooth journeys—every time.
+          Whether it’s work, shopping, or a late-night trip, we connect you with reliable drivers near you. Fast pickups, transparent pricing, and smooth journeys every time.
         </h3>
 
         <Link to="/book">

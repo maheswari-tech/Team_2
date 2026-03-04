@@ -22,6 +22,7 @@ function Navbar(){
           <Link to="/">Home</Link>
           <Link to="/book">Book Ride</Link>
           <Link to="/about">About Us</Link>
+          <Link to="/testimonials">Testimonials</Link>
         </div>
 
         <div className="navbutton">

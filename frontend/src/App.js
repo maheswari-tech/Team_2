@@ -8,6 +8,7 @@ import DriverDashboard from "./pages/DriverDashboard";
 import Navbar from "./components/Navbar";
 import BookRide from "./pages/BookRide";
 import About from "./pages/About";
+import Testimonials from "./pages/Testimonials";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About/>}/>
         <Route path="/book" element={<BookRide />} />
+        <Route path="/testimonials" element={<Testimonials/>} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path="/driver-dashboard" element={<DriverDashboard />} />

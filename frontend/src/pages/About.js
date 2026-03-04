@@ -1,27 +1,41 @@
-import React from "react";
 import "../styles/main.css";
-
 function About(){
-  return (
+
+  return(
+
     <div className="about-container">
-      <h1 className="about-title">About Us</h1>
-      <p className="about-text">
-        Welcome to our platform, where convenience meets reliability.
-        We are committed to transforming everyday travel by connecting riders
-        with trusted drivers through smart, seamless technology.
+
+      <h1 className="about-title">About Rapid-X</h1>
+
+      <p className="about-description">
+        Rapid-X is a modern ride booking platform designed to make transportation
+        easy, fast, and reliable. Our mission is to connect riders with trusted
+        drivers through a simple and efficient booking system.
       </p>
-      <p className="about-text">
-        Our mission is simple — to make transportation safe, affordable, and
-        accessible for everyone. Whether it’s a daily commute, airport
-        transfer, or a late-night ride, we ensure comfort, transparency, and
-        peace of mind at every step.
-      </p>
-      <p className="about-text">
-        With real-time tracking, verified drivers, and secure payments, we
-        focus on delivering a smooth and dependable ride experience.
-      </p>
+
+      <div className="about-features">
+
+        <div className="feature-card">
+          <h3>Easy Booking</h3>
+          <p>Book rides instantly with a simple and user-friendly interface.</p>
+        </div>
+
+        <div className="feature-card">
+          <h3>Trusted Drivers</h3>
+          <p>All drivers are verified to ensure safe and comfortable rides.</p>
+        </div>
+
+        <div className="feature-card">
+          <h3>Affordable Prices</h3>
+          <p>We offer transparent pricing with no hidden charges.</p>
+        </div>
+
+      </div>
+
     </div>
-  );
-};
+
+  )
+
+}
 
 export default About;

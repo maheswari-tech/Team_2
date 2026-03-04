@@ -1,47 +1,51 @@
-import { useNavigate } from 'react-router-dom';
-import '../styles/bookride.css'
+import { useNavigate } from "react-router-dom";
+import "../styles/bookride.css";
 
 function BookRide(){
+
   const navigate = useNavigate();
+
   const bookride = () => {
+
     const loggedIn = localStorage.getItem("isUserLoggedIn");
 
-    if(loggedIn !== "true"){
-      navigate("/login");
+    if(loggedIn === "true"){
+      navigate("/user-dashboard");   // user already logged in
     }
     else{
-      localStorage.removeItem("isUserLoggedIn");
-      navigate("/book-ride");
+      alert("Please login to book a ride");
+      navigate("/login");            // user not logged in
     }
 
-  }
- return(
+  };
 
-  <div className="bookcontainer">
+  return(
 
-    <div className="card">
+    <div className="bookcontainer">
 
-      <h2>Book a Ride</h2>
+      <div className="card">
 
-      <input placeholder="Pickup Location"/>
+        <h2>Book a Ride</h2>
 
-      <input placeholder="Drop Location"/>
+        <input placeholder="Pickup Location"/>
 
-      <input type="date"/>
+        <input placeholder="Drop Location"/>
 
-      <select className='bookselect'>
-        <option>Car</option>
-        <option>Bike</option>
-        <option>Auto</option>
-      </select>
+        <input type="date"/>
 
-      <button onClick={bookride}>Book Ride</button>
+        <select className="bookselect">
+          <option>Car</option>
+          <option>Bike</option>
+          <option>Auto</option>
+        </select>
+
+        <button onClick={bookride}>Book Ride</button>
+
+      </div>
 
     </div>
 
-  </div>
-
- )
+  )
 
 }
 
