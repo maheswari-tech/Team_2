@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import "../styles/admin.css";
 
 function AdminDashboard() {
@@ -11,7 +11,26 @@ function AdminDashboard() {
   
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [filter, setFilter] = useState("all");
+  useEffect(() => {
+  fetchDrivers();
+}, []);
 
+const fetchDrivers = async () => {
+  try {
+    const response = await fetch("http://localhost:8080/api/drivers/get-drivers");
+
+    if (!response.ok) {
+      console.error("Failed to fetch drivers");
+      return;
+    }
+
+    const data = await response.json();
+    setDrivers(data);
+
+  } catch (error) {
+    console.error("Error fetching drivers:", error);
+  }
+};
   // Add Driver Function
   const handleAddDriver = async () => {
     if (!newDriver.name || !newDriver.email || !newDriver.phone || !newDriver.password || !newDriver.location) {
