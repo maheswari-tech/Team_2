@@ -39,3 +39,15 @@ export const getUserRides = async (userId) => {
     const response = await axios.get(`${API_BASE_URL}/user/${userId}`);
     return response.data;
 };
+
+export const getDriverActiveRide = async (driverId) => {
+    const response = await axios.get(`${API_BASE_URL}/driver/${driverId}/active`);
+    return response.data;
+};
+
+export const cancelRide = async (rideId) => {
+    const response = await axios.post(`${API_BASE_URL}/cancel`, {
+        rideId
+    });
+    return response.data;
+};

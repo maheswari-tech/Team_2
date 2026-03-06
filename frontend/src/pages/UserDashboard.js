@@ -41,7 +41,10 @@ function UserDashboard() {
     };
 
     fetchUserRides();
-    const interval = setInterval(fetchActiveRide, 5000);
+    const interval = setInterval(() => {
+      fetchUserRides();
+      fetchActiveRide();
+    }, 5000);
     return () => clearInterval(interval);
   }, [userId]);
 
@@ -73,9 +76,16 @@ function UserDashboard() {
   };
 
 
-  const cancelRide = () => {
-    setCurrentRide(null);
-    alert("Ride cancelled");
+  const cancelRide = async () => {
+    if (currentRide) {
+      try {
+        await rideService.cancelRide(currentRide.id);
+        setCurrentRide(null);
+        alert("Ride cancelled successfully");
+      } catch (error) {
+        alert("Failed to cancel ride");
+      }
+    }
   };
 
   return (
@@ -127,7 +137,11 @@ function UserDashboard() {
               {currentRide.status === "ACCEPTED" && (
                 <div className="ride-info">
                   <p><strong>Driver:</strong> {currentRide.driver?.name || "Assigned"}</p>
-                  <p><strong>OTP for Driver:</strong> <span className="otp-display">{currentRide.otp}</span></p>
+                  <div className="otp-container">
+                    <p><strong>OTP for Driver:</strong></p>
+                    <div className="otp-bubble">{currentRide.otp}</div>
+                    <small>Share this OTP with your driver to start the ride</small>
+                  </div>
                   <p><strong>From:</strong> {currentRide.pickupLocation}</p>
                   <p><strong>To:</strong> {currentRide.dropLocation}</p>
                   <p><strong>Fare:</strong> ₹{currentRide.fare}</p>

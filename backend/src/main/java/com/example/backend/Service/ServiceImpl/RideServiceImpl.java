@@ -87,4 +87,20 @@ public class RideServiceImpl implements RideService {
     public List<Ride> getUserRides(Long userId) {
         return rideRepository.findByUserId(userId);
     }
+
+    @Override
+    public Ride getDriverActiveRide(Long driverId) {
+        List<Ride> activeRides = rideRepository.findByDriverId(driverId);
+        return activeRides.stream()
+                .filter(r -> r.getStatus().equals("ACCEPTED") || r.getStatus().equals("ONGOING"))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public Ride cancelRide(Long rideId) {
+        Ride ride = rideRepository.findById(rideId).orElseThrow();
+        ride.setStatus("CANCELLED");
+        return rideRepository.save(ride);
+    }
 }

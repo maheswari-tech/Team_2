@@ -52,4 +52,14 @@ public class RideController {
     public List<Ride> getUserRides(@PathVariable Long userId) {
         return rideService.getUserRides(userId);
     }
+
+    @GetMapping("/driver/{driverId}/active")
+    public Ride getActiveRide(@PathVariable Long driverId) {
+        return rideService.getDriverActiveRide(driverId);
+    }
+
+    @PostMapping("/cancel")
+    public Ride cancelRide(@RequestBody Map<String, Long> payload) {
+        return rideService.cancelRide(payload.get("rideId"));
+    }
 }

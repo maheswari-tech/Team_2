@@ -11,4 +11,6 @@ public interface RideService {
     Ride startRide(Long rideId, String otp);
     Ride completeRide(Long rideId);
     List<Ride> getUserRides(Long userId);
+    Ride getDriverActiveRide(Long driverId);
+    Ride cancelRide(Long rideId);
 }

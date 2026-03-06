@@ -231,3 +231,25 @@
   justify-content: flex-end;
   flex-wrap: wrap;
 }
+
+.otp-container {
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  text-align: center;
+}
+
+.otp-bubble {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 5px;
+  color: #856404;
+  margin: 10px 0;
+}
+
+.otp-container small {
+  color: #666;
+  font-style: italic;
+}

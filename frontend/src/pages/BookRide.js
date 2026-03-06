@@ -1,4 +1,4 @@
-import { useState, useRef,useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleMap, useJsApiLoader, Autocomplete, DirectionsRenderer } from "@react-google-maps/api";
 import "../styles/bookride.css";
@@ -107,7 +107,7 @@ function BookRide() {
             <>
               <Autocomplete onPlaceChanged={calculateRoute}>
                 <input
-                  placeholder="Pickup Location (e.g. Salem)"
+                  placeholder="Pickup Location"
                   ref={pickupRef}
                   className="form-input"
                 />
@@ -115,7 +115,7 @@ function BookRide() {
 
               <Autocomplete onPlaceChanged={calculateRoute}>
                 <input
-                  placeholder="Drop Location (e.g. Karur)"
+                  placeholder="Drop Location"
                   ref={dropRef}
                   className="form-input"
                 />
@@ -125,13 +125,13 @@ function BookRide() {
             <div className="fallback-inputs">
               <p className="warning-text">⚠️ Google Maps API Key missing/invalid. Using manual mode.</p>
               <input
-                placeholder="Pickup Location (e.g. Salem)"
+                placeholder="Pickup Location"
                 className="form-input"
                 value={formData.pickup}
                 onChange={(e) => setFormData({ ...formData, pickup: e.target.value })}
               />
               <input
-                placeholder="Drop Location (e.g. Karur)"
+                placeholder="Drop Location"
                 className="form-input"
                 value={formData.drop}
                 onChange={(e) => setFormData({ ...formData, drop: e.target.value })}

@@ -29,6 +29,21 @@ function DriverDashboard() {
     }
   }, [driverStatus]);
 
+  useEffect(() => {
+    const fetchActiveRide = async () => {
+      try {
+        const activeRide = await rideService.getDriverActiveRide(driverId);
+        if (activeRide) {
+          setCurrentRide(activeRide);
+          setDriverStatus("online");
+        }
+      } catch (error) {
+        console.error("Error fetching active ride", error);
+      }
+    };
+    fetchActiveRide();
+  }, [driverId]);
+
 
   const toggleStatus = () => {
     setDriverStatus(driverStatus === "online" ? "offline" : "online");
