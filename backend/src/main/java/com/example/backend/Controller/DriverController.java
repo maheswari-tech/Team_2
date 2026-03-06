@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.backend.Entity.Driver;
 import com.example.backend.Service.DriverService;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/drivers")
 public class DriverController {
@@ -23,7 +23,7 @@ public class DriverController {
     }
 
 
-    @GetMapping
+    @GetMapping("/get-drivers")
     public List<Driver> getAllDrivers() {
         return driverService.getAllDrivers();
     }

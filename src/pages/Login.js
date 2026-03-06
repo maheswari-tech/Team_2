@@ -9,30 +9,30 @@ const adminCredentials = {
 
 function Login() {
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
+  const [role,setRole] = useState("");
 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
 
-    if (role === "") {
+    if(role === ""){
       alert("Please select a role");
       return;
     }
 
     /* ---------------- ADMIN LOGIN ---------------- */
 
-    if (role === "ADMIN") {
+    if(role === "ADMIN"){
 
-      if (email === adminCredentials.email && password === adminCredentials.password) {
+      if(email === adminCredentials.email && password === adminCredentials.password){
 
         alert("Admin Login Successful");
         navigate("/admin-dashboard");
 
       }
-      else {
+      else{
         alert("Invalid Admin Credentials");
       }
 
@@ -40,40 +40,38 @@ function Login() {
 
     /* ---------------- DRIVER LOGIN ---------------- */
 
-    else if (role === "DRIVER") {
+    else if(role === "DRIVER"){
 
       const slogin = {
         email,
         password
       };
 
-      try {
+      try{
 
-        const response = await fetch("http://localhost:8080/api/drivers/driver-login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
+        const response = await fetch("http://localhost:8080/api/drivers/driver-login",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
           },
-          body: JSON.stringify(slogin)
+          body:JSON.stringify(slogin)
         });
 
         const data = await response.json();
 
-        if (data.success) {
+        if(data.success){
           alert("Driver Login Successful");
 
-          localStorage.setItem("isDriverLoggedIn", "true");
-          localStorage.setItem("driverId", data.driverId);
-          localStorage.setItem("userRole", "DRIVER");
+          localStorage.setItem("isDriverLoggedIn","true");
 
           navigate("/driver-dashboard");
         }
-        else {
+        else{
           alert(data.message);
         }
 
       }
-      catch (error) {
+      catch(error){
         console.log(error);
         alert("Server error");
       }
@@ -82,42 +80,40 @@ function Login() {
 
     /* ---------------- USER LOGIN ---------------- */
 
-    else if (role === "USER") {
+    else if(role === "USER"){
 
       const slogin = {
         email,
         password
       };
 
-      try {
+      try{
 
-        const response = await fetch("http://localhost:8080/api/user/user-login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
+        const response = await fetch("http://localhost:8080/api/user/user-login",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
           },
-          body: JSON.stringify(slogin)
+          body:JSON.stringify(slogin)
         });
 
         const data = await response.json();
 
-        if (data.success) {
+        if(data.success){
 
           alert("User Login Successful");
 
-          localStorage.setItem("isUserLoggedIn", "true");
-          localStorage.setItem("userId", data.userId);
-          localStorage.setItem("userRole", "USER");
+          localStorage.setItem("isUserLoggedIn","true");
 
           navigate("/user-dashboard");   // ✅ fixed navigation
 
         }
-        else {
+        else{
           alert(data.message);
         }
 
       }
-      catch (error) {
+      catch(error){
         console.log(error);
         alert("Server error");
       }
@@ -130,7 +126,7 @@ function Login() {
     navigate("/signup");
   };
 
-  return (
+  return(
 
     <div className="container">
 
@@ -139,8 +135,8 @@ function Login() {
         <h2>Login</h2>
 
         <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
+        value={role}
+        onChange={(e)=>setRole(e.target.value)}
         >
           <option value="">Select Role</option>
           <option value="ADMIN">Admin</option>
@@ -149,16 +145,16 @@ function Login() {
         </select>
 
         <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+        value={email}
+        onChange={(e)=>setEmail(e.target.value)}
         />
 
         <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e)=>setPassword(e.target.value)}
         />
 
         <button onClick={handleLogin}>

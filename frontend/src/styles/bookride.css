@@ -1,6 +1,140 @@
-.bookcontainer{
-  display: flex;
-  justify-content: center;
-  margin-top: 70px;
+.bookcontainer {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
+.book-layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.bookselect {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.info-box {
+  background: #eef2ff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border-left: 4px solid #4f46e5;
+}
+
+.info-box p {
+  margin: 5px 0;
+  color: #3730a3;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #4338ca;
+}
+
+.map-container {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  height: 500px;
+}
+
+.map-placeholder {
+  background: #f3f4f6;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #d1d5db;
+  border-radius: 16px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.placeholder-content h3 {
+  margin-bottom: 10px;
+}
+
+.placeholder-content code {
+  background: #e5e7eb;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.warning-text {
+  color: #b91c1c;
+  background: #fef2f2;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  border: 1px solid #fecaca;
+}
+
+.mock-route {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dot.green {
+  background: #10b981;
+}
+
+.dot.red {
+  background: #ef4444;
+}
+
+.line {
+  width: 2px;
+  height: 40px;
+  background: #d1d5db;
+}
+
+@media (max-width: 900px) {
+  .book-layout {
+    grid-template-columns: 1fr;
+  }
+}

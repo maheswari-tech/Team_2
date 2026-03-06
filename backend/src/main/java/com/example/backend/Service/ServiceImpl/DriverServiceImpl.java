@@ -23,7 +23,6 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver addDriver(Driver driver) {
-        // set joined date automatically
         driver.setJoinedDate(java.time.LocalDate.now().toString());
         driver.setPassword(encoder.encode(driver.getPassword()));
         return driverRepo.save(driver);
@@ -57,13 +56,14 @@ public class DriverServiceImpl implements DriverService {
 
         Driver driver = optionalDriver.get();
         if(!encoder.matches(pass, driver.getPassword())){
-            response.put("sucess",false);
+            response.put("success",false);
             response.put("message","Incorrect Password");
             return response;
         }
 
         response.put("success",true);
         response.put("message","Login SuccessFul");
+        response.put("driverId", driver.getId());
         return response;
     }
 }

@@ -1,60 +1,80 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/driver.css";
+import * as rideService from "../services/rideService";
 
 function DriverDashboard() {
   const [driverStatus, setDriverStatus] = useState("offline");
   const [currentRide, setCurrentRide] = useState(null);
-  const [rideRequests, setRideRequests] = useState([
-    { id: 1, customer: "Alice", pickup: "MG Road", drop: "Indiranagar", distance: "5.2 km", fare: 104 },
-    { id: 2, customer: "Bob", pickup: "Koramangala", drop: "Whitefield", distance: "12.5 km", fare: 250 }
-  ]);
+  const [rideRequests, setRideRequests] = useState([]);
   const [earnings, setEarnings] = useState({ today: 354, week: 2450, month: 9850, total: 45750 });
   const [activeTab, setActiveTab] = useState("requests");
-  const [otp, setOtp] = useState("");
+  const [otpInput, setOtpInput] = useState("");
+
+  const driverId = localStorage.getItem("driverId") || 1; // Fallback for demo
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const requests = await rideService.getAvailableRides();
+        setRideRequests(requests);
+      } catch (error) {
+        console.error("Error fetching requests", error);
+      }
+    };
+
+    if (driverStatus === "online") {
+      fetchRequests();
+      const interval = setInterval(fetchRequests, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [driverStatus]);
+
 
   const toggleStatus = () => {
     setDriverStatus(driverStatus === "online" ? "offline" : "online");
   };
 
-  const acceptRide = (rideId) => {
-    const ride = rideRequests.find(r => r.id === rideId);
-    setCurrentRide(ride);
-    setRideRequests(rideRequests.filter(r => r.id !== rideId));
-    const generatedOTP = Math.floor(100000 + Math.random() * 900000);
-    setOtp(generatedOTP);
-    alert(`Ride accepted! Share OTP with customer: ${generatedOTP}`);
-  };
-
-  const startRide = () => {
-    const enteredOTP = prompt("Enter OTP from customer:");
-    if (enteredOTP === otp.toString()) {
-      alert("OTP verified! Ride started.");
-    } else {
-      alert("Invalid OTP!");
+  const acceptRide = async (rideId) => {
+    try {
+      const ride = await rideService.acceptRide(rideId, driverId);
+      setCurrentRide(ride);
+      setRideRequests(rideRequests.filter(r => r.id !== rideId));
+      alert(`Ride accepted! Ask customer for OTP.`);
+    } catch (error) {
+      alert("Failed to accept ride");
     }
   };
 
-  const completeRide = () => {
-    setCurrentRide(null);
-    setEarnings({
-      ...earnings,
-      today: earnings.today + (currentRide?.fare || 0),
-      total: earnings.total + (currentRide?.fare || 0)
-    });
-    alert(`Ride completed! Fare: ₹${currentRide?.fare}`);
+  const startRide = async () => {
+    try {
+      const ride = await rideService.startRide(currentRide.id, otpInput);
+      setCurrentRide(ride);
+      alert("OTP verified! Ride started.");
+    } catch (error) {
+      alert("Invalid OTP! Please check with customer.");
+    }
   };
 
-  const rideHistory = [
-    { id: 1, date: "Today 10:30", customer: "Alice", from: "MG Road", to: "Indiranagar", fare: 104 },
-    { id: 2, date: "Yesterday 15:45", customer: "Bob", from: "Koramangala", to: "Whitefield", fare: 250 },
-    { id: 3, date: "2024-03-13", customer: "Charlie", from: "Jayanagar", to: "Electronic City", fare: 360 }
-  ];
+  const completeRide = async () => {
+    try {
+      await rideService.completeRide(currentRide.id);
+      setEarnings({
+        ...earnings,
+        today: earnings.today + (currentRide?.fare || 0),
+        total: earnings.total + (currentRide?.fare || 0)
+      });
+      setCurrentRide(null);
+      alert(`Ride completed! Fare: ₹${currentRide?.fare}`);
+    } catch (error) {
+      alert("Failed to complete ride");
+    }
+  };
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
         <h1 className="dashboard-title">🚗 Driver Dashboard</h1>
-        <button 
+        <button
           className={`status-toggle ${driverStatus}`}
           onClick={toggleStatus}
         >
@@ -69,14 +89,6 @@ function DriverDashboard() {
           <p className="stat-number">₹{earnings.today}</p>
         </div>
         <div className="stat-card">
-          <h3>This Week</h3>
-          <p className="stat-number">₹{earnings.week}</p>
-        </div>
-        <div className="stat-card">
-          <h3>This Month</h3>
-          <p className="stat-number">₹{earnings.month}</p>
-        </div>
-        <div className="stat-card">
           <h3>Total Earnings</h3>
           <p className="stat-number">₹{earnings.total}</p>
         </div>
@@ -86,33 +98,44 @@ function DriverDashboard() {
       {currentRide && (
         <div className="current-ride-card">
           <h2>Current Ride</h2>
+          <div className={`status-badge ${currentRide.status.toLowerCase()}`}>
+            {currentRide.status}
+          </div>
           <div className="ride-details">
-            <p><strong>Customer:</strong> {currentRide.customer}</p>
-            <p><strong>Pickup:</strong> {currentRide.pickup}</p>
-            <p><strong>Drop:</strong> {currentRide.drop}</p>
-            <p><strong>Distance:</strong> {currentRide.distance}</p>
+            <p><strong>Customer:</strong> {currentRide.user?.name || "Customer"}</p>
+            <p><strong>Pickup:</strong> {currentRide.pickupLocation}</p>
+            <p><strong>Drop:</strong> {currentRide.dropLocation}</p>
             <p><strong>Fare:</strong> ₹{currentRide.fare}</p>
           </div>
-          <div className="ride-actions">
-            <button onClick={startRide} className="btn-primary">Start Ride</button>
-            <button onClick={completeRide} className="btn-success">Complete Ride</button>
-          </div>
+
+          {currentRide.status === "ACCEPTED" && (
+            <div className="otp-section">
+              <input
+                type="text"
+                placeholder="Enter Customer OTP"
+                value={otpInput}
+                onChange={(e) => setOtpInput(e.target.value)}
+                className="otp-input"
+              />
+              <button onClick={startRide} className="btn-primary">Start Ride</button>
+            </div>
+          )}
+
+          {currentRide.status === "ONGOING" && (
+            <div className="ride-actions">
+              <button onClick={completeRide} className="btn-success">Complete Ride</button>
+            </div>
+          )}
         </div>
       )}
 
       {/* Tabs */}
       <div className="dashboard-tabs">
-        <button 
+        <button
           className={`tab-btn ${activeTab === "requests" ? "active" : ""}`}
           onClick={() => setActiveTab("requests")}
         >
           📋 Ride Requests ({rideRequests.length})
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === "history" ? "active" : ""}`}
-          onClick={() => setActiveTab("history")}
-        >
-          📜 Ride History
         </button>
       </div>
 
@@ -120,58 +143,26 @@ function DriverDashboard() {
       {activeTab === "requests" && (
         <div className="section-card">
           <h2>Available Ride Requests</h2>
-          {rideRequests.length === 0 ? (
+          {driverStatus === "offline" ? (
+            <p className="no-data">Go online to see requests</p>
+          ) : rideRequests.length === 0 ? (
             <p className="no-data">No ride requests available</p>
           ) : (
             rideRequests.map(ride => (
               <div key={ride.id} className="request-card">
                 <div className="request-header">
-                  <h3>{ride.customer}</h3>
+                  <h3>{ride.user?.name || "Customer"}</h3>
                   <span className="fare-badge">₹{ride.fare}</span>
                 </div>
-                <p>📍 From: {ride.pickup}</p>
-                <p>🏁 To: {ride.drop}</p>
-                <p>📏 Distance: {ride.distance}</p>
+                <p>📍 From: {ride.pickupLocation}</p>
+                <p>🏁 To: {ride.dropLocation}</p>
+                <p>📏 Distance: {ride.distance} km</p>
                 <button onClick={() => acceptRide(ride.id)} className="btn-primary">
                   Accept Ride
                 </button>
               </div>
             ))
           )}
-        </div>
-      )}
-
-      {/* Ride History Tab */}
-      {activeTab === "history" && (
-        <div className="section-card">
-          <h2>Your Ride History</h2>
-          <div className="filter-buttons">
-            <button className="filter-btn active">Today</button>
-            <button className="filter-btn">Week</button>
-            <button className="filter-btn">Month</button>
-          </div>
-          <table className="rides-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Customer</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Fare</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rideHistory.map(ride => (
-                <tr key={ride.id}>
-                  <td>{ride.date}</td>
-                  <td>{ride.customer}</td>
-                  <td>{ride.from}</td>
-                  <td>{ride.to}</td>
-                  <td>₹{ride.fare}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       )}
     </div>

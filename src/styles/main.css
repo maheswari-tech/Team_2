@@ -1,0 +1,445 @@
+/* ---------------- GLOBAL RESET ---------------- */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins', sans-serif;
+}
+
+
+/* ---------------- NAVBAR ---------------- */
+
+nav{
+  background:#111;
+  padding:15px 60px;
+  color:white;
+}
+
+.navbody{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* Logo */
+
+.navlogo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logoimg{
+  width:40px;
+  height:40px;
+}
+
+.navlogo h2{
+  font-size:23px;
+  font-family:'Times New Roman', Times, serif;
+}
+
+/* Menu */
+
+.navtop{
+  display:flex;
+  gap:30px;
+}
+
+.navtop a{
+  text-decoration:none;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+.navtop a:hover{
+  color:#f0c040;
+}
+
+/* Buttons */
+
+.navbutton{
+  display:flex;
+  gap:15px;
+}
+
+.loginbtn,
+.signupbtn{
+  width:90px;
+  height:34px;
+  border-radius:6px;
+  border:1px solid white;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.loginbtn{
+  background:linear-gradient(90deg,#ff7a00,#ffb347);
+  color:white;
+}
+
+.signupbtn{
+  background:linear-gradient(90deg,#0066ff,#00c6ff);
+  color:white;
+}
+
+.loginbtn:hover,
+.signupbtn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 15px rgba(255,255,255,0.4);
+}
+
+
+/* ---------------- HOME PAGE ---------------- */
+
+.home-container{
+  height:calc(100vh - 70px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:white;
+
+  background-image:url("../assets/bg.png");
+  background-size:cover;
+  background-position:center;
+  position:relative;
+}
+
+/* Overlay */
+
+.home-container::before{
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  z-index:1;
+}
+
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+/* HERO TEXT */
+
+.hero-content h1{
+  font-size:40px;
+  color:white;
+  font-weight:700;
+}
+
+.hero-content h3{
+  font-size:21px;
+  color:#d1d1d1;
+  max-width:800px;
+  line-height:1.6;
+}
+.hero-title{
+  font-size:52px;
+  font-weight:700;
+  letter-spacing:1px;
+  margin-bottom:20px;
+}
+.hero-text{
+  font-size:20px;
+  color:#e0e0e0;
+  max-width:750px;
+  line-height:1.6;
+  margin-bottom:30px;
+}
+
+/* Book Button */
+
+.book-btn{
+  background:linear-gradient(90deg,#ff7a00,#ffb347);
+  border:none;
+  color:white;
+  padding:14px 32px;
+  font-size:18px;
+  font-weight:600;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.book-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0px 10px 25px rgba(0,0,0,0.4);
+}
+
+
+/* ---------------- LOGIN & SIGNUP ---------------- */
+
+.container{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#f4f6f9,#e9eef5);
+}
+
+.card{
+  width:360px;
+  padding:35px;
+  background:white;
+  border-radius:10px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  text-align:center;
+}
+
+.card h2{
+  margin-bottom:20px;
+}
+
+/* Inputs */
+
+.card input,
+.card select{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+
+.card input:focus,
+.card select:focus{
+  border-color:#f0c040;
+  box-shadow:0 0 4px rgba(240,192,64,0.6);
+}
+
+/* Button */
+
+.card button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:6px;
+  background:#f0c040;
+  color:black;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.card button:hover{
+  background:#ffd76a;
+}
+
+/* Login/Signup Switch */
+
+.switch-text{
+  margin-top:15px;
+  font-size:14px;
+  color:#555;
+}
+
+.signup-link,
+.login-link{
+  color:#f0c040;
+  cursor:pointer;
+  font-weight:500;
+}
+
+.signup-link:hover,
+.login-link:hover{
+  text-decoration:underline;
+}
+
+
+/* ---------------- ABOUT PAGE ---------------- */
+
+.about-container{
+  max-width:1100px;
+  margin:80px auto;
+  text-align:center;
+  padding:20px;
+}
+
+/* Title */
+
+.about-title{
+  font-size:40px;
+  font-weight:700;
+  margin-bottom:20px;
+  color:#111;
+}
+
+/* Description */
+
+.about-description{
+  font-size:18px;
+  color:#555;
+  line-height:1.7;
+  max-width:750px;
+  margin:0 auto 50px auto;
+}
+
+/* Features section */
+
+.about-features{
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  flex-wrap:wrap;
+}
+
+/* Feature cards */
+
+.feature-card{
+  width:260px;
+  padding:30px 25px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.08);
+  transition:all 0.3s ease;
+}
+
+/* Hover animation */
+
+.feature-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* Feature title */
+
+.feature-card h3{
+  font-size:20px;
+  margin-bottom:12px;
+  color:#f0c040;
+}
+
+/* Feature text */
+
+.feature-card p{
+  font-size:15px;
+  color:#666;
+  line-height:1.6;
+}
+
+/* ================= TESTIMONIALS ================= */
+
+.testimonial-section{
+  padding:80px 20px;
+  background:#f5f6f8;
+  text-align:center;
+}
+
+/* Title */
+
+.testimonial-title{
+  font-size:36px;
+  font-weight:700;
+  color:#f0c040;
+  letter-spacing:2px;
+}
+
+.testimonial-subtitle{
+  margin-top:10px;
+  color:#666;
+  margin-bottom:60px;
+}
+
+/* Cards container */
+
+.testimonial-cards{
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  flex-wrap:wrap;
+}
+
+/* Card */
+
+.testimonial-card{
+  width:280px;
+  background:white;
+  padding:50px 25px 25px 25px;
+  border-radius:10px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.1);
+  position:relative;
+  transition:0.3s;
+}
+
+.testimonial-card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* Profile image */
+
+.testimonial-img{
+  width:85px;
+  height:85px;
+  border-radius:50%;
+  object-fit:cover;
+  position:absolute;
+  top:-40px;
+  left:50%;
+  transform:translateX(-50%);
+  border:4px solid white;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Quote */
+
+.testimonial-text{
+  font-style:italic;
+  color:#444;
+  margin-top:20px;
+  line-height:1.6;
+}
+
+/* Name */
+
+.testimonial-name{
+  margin-top:20px;
+  font-size:18px;
+  font-weight:600;
+  color:#f0c040;
+}
+
+/* Role */
+
+.testimonial-role{
+  font-size:14px;
+  color:#777;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+
+@media (max-width:768px){
+
+  nav{
+    padding:15px 20px;
+  }
+
+  .navtop{
+    display:none;
+  }
+
+  .hero-content h1{
+    font-size:32px;
+  }
+
+  .hero-content h3{
+    font-size:20px;
+  }
+
+  .about-container{
+    margin:20px;
+    padding:25px;
+  }
+
+}

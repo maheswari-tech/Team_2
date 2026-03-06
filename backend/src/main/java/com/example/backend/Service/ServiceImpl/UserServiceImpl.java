@@ -39,13 +39,14 @@ public class UserServiceImpl implements UserService {
 
         User user = optionalUser.get();
         if(!encoder.matches(pass, user.getPassword())){
-            response.put("sucess",false);
+            response.put("success",false);
             response.put("message","Incorrect Password");
             return response;
         }
 
         response.put("success",true);
         response.put("message","Login SuccessFul");
+        response.put("userId", user.getId());
         return response;
     }
 }

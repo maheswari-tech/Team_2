@@ -1,0 +1,137 @@
+.password-display {
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.note {
+  margin-top: 15px;
+  color: #f57c00;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 1.1rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+/* Table container */
+.drivers-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+  color: #fff;
+}
+
+/* Table header */
+.drivers-table thead th {
+  background: linear-gradient(135deg, #222, #444);
+  color: #ff9800;
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 2px solid #555;
+}
+
+/* Table body rows */
+.drivers-table tbody tr {
+  background-color: #1a1a1a;
+  transition: background 0.3s;
+}
+
+.drivers-table tbody tr:nth-child(even) {
+  background-color: #222;
+}
+
+.drivers-table tbody tr:hover {
+  background-color: #333;
+}
+
+/* Table cells */
+.drivers-table td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #444;
+}
+
+/* Password display style */
+.password-display {
+  font-family: monospace;
+  color: #ffc107;
+}
+
+/* Status badges */
+.status {
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.status.online {
+  background-color: #4caf50; /* green */
+}
+
+.status.offline {
+  background-color: #9e9e9e; /* gray */
+}
+
+/* Action buttons */
+.action-btn {
+  padding: 5px 12px;
+  margin: 0 2px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.action-btn.view {
+  background: linear-gradient(135deg, #2196f3, #00bcd4);
+  color: #fff;
+}
+
+.action-btn.view:hover {
+  opacity: 0.85;
+}
+
+.action-btn.delete {
+  background: linear-gradient(135deg, #f44336, #ff5722);
+  color: #fff;
+}
+
+.action-btn.delete:hover {
+  opacity: 0.85;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .drivers-table thead {
+    display: none;
+  }
+  .drivers-table tbody tr {
+    display: block;
+    margin-bottom: 15px;
+  }
+  .drivers-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #444;
+  }
+  .drivers-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #ff9800;
+  }
+}

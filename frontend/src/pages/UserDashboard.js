@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/user.css";
+import * as rideService from "../services/rideService";
 
 function UserDashboard() {
   const [activeTab, setActiveTab] = useState("book");
   const [currentRide, setCurrentRide] = useState(null);
-  const [otp, setOtp] = useState("");
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  
+  const [userRides, setUserRides] = useState([]);
+
   const [rideForm, setRideForm] = useState({
     pickup: "",
     drop: "",
@@ -14,44 +14,64 @@ function UserDashboard() {
     distance: ""
   });
 
-  const rideHistory = [
-    { id: 1, date: "2024-03-15", from: "MG Road", to: "Indiranagar", fare: 104, status: "completed" },
-    { id: 2, date: "2024-03-14", from: "Koramangala", to: "Whitefield", fare: 250, status: "completed" },
-    { id: 3, date: "2024-03-13", from: "Jayanagar", to: "Electronic City", fare: 360, status: "completed" }
-  ];
+  const userId = localStorage.getItem("userId") || 1; // Fallback for demo
+
+  useEffect(() => {
+    const fetchUserRides = async () => {
+      try {
+        const rides = await rideService.getUserRides(userId);
+        setUserRides(rides);
+      } catch (error) {
+        console.error("Error fetching rides", error);
+      }
+    };
+
+    const fetchActiveRide = async () => {
+      try {
+        const rides = await rideService.getUserRides(userId);
+        const active = rides.find(r => r.status !== "COMPLETED" && r.status !== "CANCELLED");
+        if (active) {
+          setCurrentRide(active);
+        } else {
+          setCurrentRide(null);
+        }
+      } catch (error) {
+        console.error("Error fetching active ride", error);
+      }
+    };
+
+    fetchUserRides();
+    const interval = setInterval(fetchActiveRide, 5000);
+    return () => clearInterval(interval);
+  }, [userId]);
+
 
   const calculateFare = () => {
     const rates = { Car: 20, Bike: 10, Auto: 15 };
-    const distance = parseFloat(rideForm.distance) || 10;
-    return distance * rates[rideForm.vehicle];
+    const distance = parseFloat(rideForm.distance) || 0;
+    return distance * (rates[rideForm.vehicle] || 0);
   };
 
-  const handleBookRide = () => {
-    if (rideForm.pickup && rideForm.drop) {
-      const fare = calculateFare();
-      setCurrentRide({
-        ...rideForm,
-        fare,
-        status: "requested",
-        driver: null
-      });
-      setShowOtpModal(true);
-      alert("Finding nearby drivers...");
+  const handleBookRide = async () => {
+    if (rideForm.pickup && rideForm.drop && rideForm.distance) {
+      try {
+        const ride = await rideService.bookRide(
+          userId,
+          rideForm.pickup,
+          rideForm.drop,
+          rideForm.vehicle,
+          parseFloat(rideForm.distance)
+        );
+        setCurrentRide(ride);
+        alert("Finding nearby drivers...");
+      } catch (error) {
+        alert("Failed to book ride");
+      }
     } else {
       alert("Please fill all fields");
     }
   };
 
-  const verifyOtp = () => {
-    if (otp.length === 6) {
-      setCurrentRide({...currentRide, status: "ongoing"});
-      setShowOtpModal(false);
-      setOtp("");
-      alert("Ride started! Enjoy your journey.");
-    } else {
-      alert("Invalid OTP");
-    }
-  };
 
   const cancelRide = () => {
     setCurrentRide(null);
@@ -66,11 +86,7 @@ function UserDashboard() {
       <div className="stats-grid">
         <div className="stat-card">
           <h3>Total Rides</h3>
-          <p className="stat-number">24</p>
-        </div>
-        <div className="stat-card">
-          <h3>Total Spent</h3>
-          <p className="stat-number">₹3,450</p>
+          <p className="stat-number">{userRides.length}</p>
         </div>
         <div className="stat-card">
           <h3>Member Since</h3>
@@ -80,23 +96,17 @@ function UserDashboard() {
 
       {/* Tabs */}
       <div className="dashboard-tabs">
-        <button 
+        <button
           className={`tab-btn ${activeTab === "book" ? "active" : ""}`}
           onClick={() => setActiveTab("book")}
         >
           🚗 Book a Ride
         </button>
-        <button 
+        <button
           className={`tab-btn ${activeTab === "history" ? "active" : ""}`}
           onClick={() => setActiveTab("history")}
         >
           📜 Ride History
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === "payment" ? "active" : ""}`}
-          onClick={() => setActiveTab("payment")}
-        >
-          💳 Payment Methods
         </button>
       </div>
 
@@ -106,22 +116,33 @@ function UserDashboard() {
           {currentRide ? (
             <div className="current-ride">
               <h2>Your Current Ride</h2>
-              {currentRide.status === "requested" && (
-                <>
-                  <p>⏳ Finding a driver for you...</p>
-                  <button onClick={cancelRide} className="btn-danger">Cancel Request</button>
-                </>
+              <div className={`status-badge ${currentRide.status.toLowerCase()}`}>
+                {currentRide.status}
+              </div>
+
+              {currentRide.status === "REQUESTED" && (
+                <p>⏳ Finding a driver for you...</p>
               )}
-              {currentRide.status === "ongoing" && (
-                <>
-                  <p><strong>Driver:</strong> John (Rating: 4.8 ★)</p>
-                  <p><strong>Vehicle:</strong> TN01AB1234 (Bike)</p>
-                  <p><strong>From:</strong> {currentRide.pickup}</p>
-                  <p><strong>To:</strong> {currentRide.drop}</p>
+
+              {currentRide.status === "ACCEPTED" && (
+                <div className="ride-info">
+                  <p><strong>Driver:</strong> {currentRide.driver?.name || "Assigned"}</p>
+                  <p><strong>OTP for Driver:</strong> <span className="otp-display">{currentRide.otp}</span></p>
+                  <p><strong>From:</strong> {currentRide.pickupLocation}</p>
+                  <p><strong>To:</strong> {currentRide.dropLocation}</p>
                   <p><strong>Fare:</strong> ₹{currentRide.fare}</p>
+                </div>
+              )}
+
+              {currentRide.status === "ONGOING" && (
+                <div className="ride-info">
+                  <p>🚀 Ride in progress...</p>
                   <p><strong>Estimated arrival:</strong> 10 mins</p>
-                  <button onClick={cancelRide} className="btn-danger">Cancel Ride</button>
-                </>
+                </div>
+              )}
+
+              {currentRide.status !== "ONGOING" && (
+                <button onClick={cancelRide} className="btn-danger">Cancel Request</button>
               )}
             </div>
           ) : (
@@ -132,27 +153,27 @@ function UserDashboard() {
                   type="text"
                   placeholder="Pickup Location"
                   value={rideForm.pickup}
-                  onChange={(e) => setRideForm({...rideForm, pickup: e.target.value})}
+                  onChange={(e) => setRideForm({ ...rideForm, pickup: e.target.value })}
                   className="form-input"
                 />
                 <input
                   type="text"
                   placeholder="Drop Location"
                   value={rideForm.drop}
-                  onChange={(e) => setRideForm({...rideForm, drop: e.target.value})}
+                  onChange={(e) => setRideForm({ ...rideForm, drop: e.target.value })}
                   className="form-input"
                 />
                 <input
                   type="number"
                   placeholder="Distance (km)"
                   value={rideForm.distance}
-                  onChange={(e) => setRideForm({...rideForm, distance: e.target.value})}
+                  onChange={(e) => setRideForm({ ...rideForm, distance: e.target.value })}
                   className="form-input"
                 />
-                <select 
+                <select
                   className="form-input"
                   value={rideForm.vehicle}
-                  onChange={(e) => setRideForm({...rideForm, vehicle: e.target.value})}
+                  onChange={(e) => setRideForm({ ...rideForm, vehicle: e.target.value })}
                 >
                   <option value="Car">Car (₹20/km)</option>
                   <option value="Bike">Bike (₹10/km)</option>
@@ -187,58 +208,17 @@ function UserDashboard() {
               </tr>
             </thead>
             <tbody>
-              {rideHistory.map(ride => (
+              {userRides.map(ride => (
                 <tr key={ride.id}>
-                  <td>{ride.date}</td>
-                  <td>{ride.from}</td>
-                  <td>{ride.to}</td>
+                  <td>{new Date(ride.bookingTime).toLocaleDateString()}</td>
+                  <td>{ride.pickupLocation}</td>
+                  <td>{ride.dropLocation}</td>
                   <td>₹{ride.fare}</td>
-                  <td><span className="status completed">{ride.status}</span></td>
+                  <td><span className={`status ${ride.status.toLowerCase()}`}>{ride.status}</span></td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-      )}
-
-      {/* Payment Tab */}
-      {activeTab === "payment" && (
-        <div className="section-card">
-          <h2>Payment Methods</h2>
-          <div className="payment-methods">
-            <div className="payment-card">
-              <input type="radio" name="payment" /> 💳 Credit Card (•••• 4242)
-            </div>
-            <div className="payment-card">
-              <input type="radio" name="payment" /> 📱 UPI (user@okhdfcbank)
-            </div>
-            <div className="payment-card">
-              <input type="radio" name="payment" /> 💰 Cash
-            </div>
-          </div>
-          <button className="btn-primary">Add New Payment Method</button>
-        </div>
-      )}
-
-      {/* OTP Modal */}
-      {showOtpModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Enter OTP to Start Ride</h3>
-            <p>Please enter the 6-digit OTP shown on driver's app</p>
-            <input
-              type="text"
-              maxLength="6"
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              className="modal-input"
-            />
-            <div className="modal-actions">
-              <button onClick={verifyOtp} className="btn-primary">Verify</button>
-              <button onClick={() => setShowOtpModal(false)} className="btn-secondary">Cancel</button>
-            </div>
-          </div>
         </div>
       )}
     </div>

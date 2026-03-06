@@ -12,50 +12,39 @@ function Signup() {
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^\d{10}$/;
+  if (password !== confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
 
-    if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address");
+  const signupData = {
+    name,
+    email,
+    username,
+    phonenumber,
+    password,
+  };
+
+  try {
+    const response = await fetch("http://localhost:8080/api/user/userdetail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(signupData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      alert("Signup failed: " + errorData.message);
       return;
     }
-    if (!phoneRegex.test(phonenumber)) {
-      alert("Please enter a valid 10-digit phone number");
-      return;
-    }
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
 
-    const signupData = {
-      name,
-      email,
-      username,
-      phonenumber,
-      password,
-    };
-
-    try {
-      const response = await fetch("http://localhost:8080/api/user/userdetail", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signupData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        alert("Signup failed: " + errorData.message);
-        return;
-      }
-
-      const data = await response.json();
-      alert("Signup Successful! Welcome, " + data.name);
-
-      // Navigate to login or dashboard
-      navigate("/login");
+    const data = await response.json();
+    alert("Signup Successful! Welcome, " + data.name);
+    
+    // Navigate to login or dashboard
+    navigate("/login");
 
     } catch (error) {
       console.error("Error during signup:", error);
